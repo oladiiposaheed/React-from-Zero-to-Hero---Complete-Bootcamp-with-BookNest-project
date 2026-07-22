@@ -7,9 +7,6 @@ function App() {
   // Cart state — starts as empty array
   const [cart, setCart] = useState([]);
 
-  // Search state — what user types in search box
-  const [searchTerm, setSearchTerm] = useState('');
-
   //Add book to cart
   const addToCart = (book) => {
     setCart([...cart, book]);     // Copy old cart + add new book
@@ -24,14 +21,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6 md:p-10">
       <div className="max-w-7xl mx-auto">
         <Header cartCount={cart.length} />
-        {/* Pass Search Props to BookList */}
-        <BookList 
-          cart={cart} 
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onAddToCart={addToCart} 
-          onRemoveFromCart={removeFromCart}   
-        />
+        <BookList cart={cart} onAddToCart={addToCart} onRemoveFromCart={removeFromCart} />
       </div>
     </div>
   );
