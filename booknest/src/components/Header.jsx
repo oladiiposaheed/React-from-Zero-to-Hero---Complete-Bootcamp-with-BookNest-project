@@ -22,7 +22,7 @@ function Header({ cartCount }) {
         {/* ⭐ RIGHT: Cart counter — NEW */}
         <div className="bg-white/20 rounded-2xl px-6 py-4 text-center">
           <p className="text-4xl font-bold">{cartCount}</p>
-          <p className="text-sm text-indigo-1oo mt-1">🛒 Cart</p>
+          <p className="text-sm text-indigo-100 mt-1">🛒 Cart</p>
         </div>
       </div>
     </header>
