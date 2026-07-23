@@ -1,11 +1,35 @@
 import BookCard from './BookCard';
 
-function BookList({ books, cart, searchTerm, onSearchChange, onAddToCart, onRemoveFromCart }) {
+function BookList({ books, loading, error, cart, searchTerm, onSearchChange, onAddToCart, onRemoveFromCart }) {
 
   //Filter books based on search term
   const filteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Show spinner while loading
+  if (loading) {
+    return (
+      <div className='text-center py-20'>
+        <p className='text-2xl text-gray-500'>⏳ Loading books...</p>
+      </div>
+    );
+  }
+
+  // Show error message if API failed
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <p className='text-2xl text-red-500'>❌ {error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className='mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700'
+        >
+          Try Again
+        </button>
+      </div>
+    )
+  }
 
   return (
     <section>

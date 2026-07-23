@@ -1,26 +1,19 @@
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import BookList from './components/BookList';
 import AddBookForm from './components/AddBookForm';
-import { useState } from 'react';
 
 function App() {
 
-  // Cart state — starts as empty array
+  // ===== 1. ALL STATE =====
+
+  // Cart state
   const [cart, setCart] = useState([]);
 
   // Books state
-  const [books, setBooks] = useState([
-    { id: 1, title: 'Clean Code', author: 'Robert C. Martin', year: 2008, genre: 'Programming', rating: 4, pages: 464, isNew: true, isBestseller: true, cover: 'https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg' },
-    { id: 2, title: 'Python Crash Course', author: 'Eric Matthes', year: 2019, genre: 'Programming', rating: 5, pages: 544, isNew: false, isBestseller: true, cover: 'https://covers.openlibrary.org/b/isbn/9781593276034-L.jpg' },
-    { id: 3, title: 'JavaScript: Good Parts', author: 'Douglas Crockford', year: 2008, genre: 'Programming', rating: 4, pages: 176, isNew: false, isBestseller: false, cover: 'https://covers.openlibrary.org/b/isbn/9780596517748-L.jpg' },
-    { id: 4, title: 'React Up & Running', author: 'Stoyan Stefanov', year: 2021, genre: 'Technology', rating: 4, pages: 222, isNew: true, isBestseller: false, cover: 'https://covers.openlibrary.org/b/isbn/9781492051466-L.jpg' },
-    { id: 5, title: 'The Pragmatic Programmer', author: 'David Thomas', year: 2019, genre: 'Programming', rating: 5, pages: 352, isNew: false, isBestseller: true, cover: 'https://covers.openlibrary.org/b/isbn/9780135957059-L.jpg' },
-    { id: 6, title: 'Design Patterns', author: 'Gang of Four', year: 1994, genre: 'Computer Science', rating: 4, pages: 416, isNew: false, isBestseller: false, cover: 'https://covers.openlibrary.org/b/isbn/9780201633610-L.jpg' },
-    { id: 7, title: 'Design of Everyday Things', author: 'Don Norman', year: 1988, genre: 'Technology', rating: 4, pages: 368, isNew: true, isBestseller: false, cover: 'https://covers.openlibrary.org/b/isbn/9780465050659-L.jpg' },
-    { id: 8, title: 'Learning React', author: 'Alex Banks', year: 2020, genre: 'Technology', rating: 4, pages: 310, isNew: true, isBestseller: true, cover: 'https://covers.openlibrary.org/b/isbn/9781492051725-L.jpg' },
-  ]);
+  const [books, setBooks] = useState([]);
 
-  // Form state for adding new books
+  // Form state
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -30,29 +23,37 @@ function App() {
     pages: '',
   });
 
-  // Track next available ID
-  const [nextId, setNextId] = useState(9);  // next ID is 9
+  // Track next ID State
+  const [nextId, setNextId] = useState(9);
 
-  // Handle form input changes
+  // Loading state
+  const [loading, setLoading] = useState(true);
+
+  // Error state — null = no error
+  const [error, setError] = useState(null);
+
+  // 2. Search state
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // ALL FUNCTIONS =====
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Search state — what user types in search box
-  const [searchTerm, setSearchTerm] = useState('');
-
-  //Add book to cart
+  // Add to cart
   const addToCart = (book) => {
-    setCart([...cart, book]);     // Copy old cart + add new book
+    setCart([...cart, book]);
   };
 
-  // Remove book from cart by ID
+  // Remove from cart
   const removeFromCart = (id) => {
-    setCart(cart.filter(book => book.id !== id));     // Keep only books that don't match
+    setCart(cart.filter(book => book.id !== id));
   };
 
-  // Handle form submission — add new book
+  // Add new book
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -74,21 +75,66 @@ function App() {
     setFormData({ title: '', author: '', year: '', genre: '', rating: '', pages: '' });
   };
 
+  // 3. useEffect to fetch books from API 
+  useEffect(() => {
+    const fetchBooks = async () => {
+
+      try {
+        setLoading(true);
+        setError(null);     // Clear old errors
+
+        const response = await fetch('https://openlibrary.org/search.json?q=programming&limit=8');
+        
+        if (!response.ok) {   // Check if response is good
+          throw new Error('Failed to fetch books');
+        }
+
+        const data = await response.json();
+
+        const formattedBooks = data.docs.slice(0, 8).map((book, index) => ({
+          id: index + 1,
+          title: book.title || 'Unknown Title',
+          author: book.author_name?.[0] || 'Unknown Author',
+          year: book.first_publush_year || 2024,
+          gnenre: book.subject?.[0] || 'General',
+          rating: Math.floor(Math.random() * 3) + 3,
+          pages: Math.floor(Math.random() * 500) + 100,
+          isNew: index < 2,
+          isBestseller: index < 1,
+          cover: book.cover_i
+            ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+            : `https://covers.openlibrary.org/b/isbn/9780132350884-L.jpg`,
+          }));
+
+          setBooks(formattedBooks);
+        } catch (err) {
+          setError('Failed to load books. Please try again.');  // Set error
+        } finally {
+          setLoading(false);     // Always stop loading
+        }
+    };
+
+    fetchBooks();
+  }, []);
+
+  // ===== 4. RETURN =====
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6 md:p-10">
       <div className="max-w-7xl mx-auto">
         <Header cartCount={cart.length} />
 
-        {/* Add Book Form Props to AddBookForm*/}
+        {/* Form imported as component */}
         <AddBookForm 
           formData={formData}
           onChange={handleChange}
           onSubmit={handleSubmit}
         />
-        
-        {/* Pass Search Props to BookList */}
+
         <BookList 
           books={books}
+          loading={loading}
+          error={error}
           cart={cart} 
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
