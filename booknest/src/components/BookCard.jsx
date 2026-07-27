@@ -1,8 +1,14 @@
+import { Link } from "react-router-dom";
+
 function BookCard({ book, isInCart, onAdd, onRemove }) {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
       <div className="relative">
-        <img src={book.cover} alt={book.title} className="w-full h-56 object-cover" />
+
+        <Link to={`/book/${book.id}`}>
+          <img src={book.cover} alt={book.title} className="w-full h-56 object-cover" />
+        </Link>
+
         {book.isNew && (
           <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg">NEW</span>
         )}
@@ -10,8 +16,14 @@ function BookCard({ book, isInCart, onAdd, onRemove }) {
           <span className="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-lg">🔥 BESTSELLER</span>
         )}
       </div>
-      <div className="p-5">
+
+      {/* Details div */}
+      <div className="p-5 flex flex-col flex-1">
+
+        <Link to={`/book/${book.id}`}>
         <h3 className="font-bold text-gray-800 text-lg mb-2">{book.title}</h3>
+        </Link>
+
         <p className="text-gray-500 text-sm mb-3">by {book.author}</p>
         <div className="flex items-center gap-1 mb-2">
           <span className="text-yellow-500 text-sm">{'★'.repeat(book.rating)}{'☆'.repeat(5 - book.rating)}</span>
@@ -20,9 +32,10 @@ function BookCard({ book, isInCart, onAdd, onRemove }) {
         <div className="flex items-center gap-1 mb-3 text-gray-500 text-sm">
           <span>📄</span><span>{book.pages} pages</span>
         </div>
-        <div className="flex gap-2">
+        {/*  badges div */}
+        <div className="flex gap-2 mt-auto mb-4">
           <span className="bg-purple-100 text-purple-700 text-xs font-medium px-3 py-1 rounded-full">{book.year}</span>
-          <span className="bg-blue-100 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">{book.genre}</span>
+          <span className="bg-blue-100 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">{book.genre || 'General'}</span>
         </div>
 
         {/* DECISION: Which button to show? */}

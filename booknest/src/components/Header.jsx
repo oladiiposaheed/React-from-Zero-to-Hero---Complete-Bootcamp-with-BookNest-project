@@ -1,4 +1,6 @@
-function Header({ cartCount }) {
+import { Link } from "react-router-dom";
+
+function Header({ cartCount = 0 }) {
   return (
     <header className="bg-gradient-to-br from-indigo-700 via-purple-600 to-pink-500 text-white p-10 rounded-2xl shadow-2xl mb-10">
       
