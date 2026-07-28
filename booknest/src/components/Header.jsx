@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { CartContext } from "../contexts/CartContext";
 
-function Header({ cartCount = 0 }) {
+
+function Header() {
+  const { cart } = useContext(CartContext)  // Read cart from context
   return (
     <header className="bg-gradient-to-br from-indigo-700 via-purple-600 to-pink-500 text-white p-10 rounded-2xl shadow-2xl mb-10">
       
@@ -21,9 +25,9 @@ function Header({ cartCount = 0 }) {
           </div>
         </div>
 
-        {/* ⭐ RIGHT: Cart counter — NEW */}
+        {/* RIGHT: Cart counter */}
         <div className="bg-white/20 rounded-2xl px-6 py-4 text-center">
-          <p className="text-4xl font-bold">{cartCount}</p>
+          <p className="text-4xl font-bold">{cart.length}</p>
           <p className="text-sm text-indigo-100 mt-1">🛒 Cart</p>
         </div>
       </div>
