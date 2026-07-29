@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../contexts/CartContext";
 
-function BookCard({ book, isInCart }) {
+function BookCard({ book, isInCart, onAdd, onRemove }) {
 
   const { dispatch } = useContext(CartContext)
   return (
@@ -46,7 +46,7 @@ function BookCard({ book, isInCart }) {
         {isInCart ? (
             // TRUE: Book IS in cart → show REMOVE
             <button
-                onClick={() => dispatch({ type: 'REMOVE', id: book.id })}
+                onClick={() => onRemove(book.id)}
                 className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 font-medium"
             >
                 Remove from Cart
@@ -54,7 +54,7 @@ function BookCard({ book, isInCart }) {
         ) : (
             // FALSE: Book is NOT in cart → show ADD
             <button
-                onClick={() => dispatch({ type: 'ADD', book })}
+                onClick={() => onAdd(book)}
                 className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 font-medium"
             >
                 + Add to Cart

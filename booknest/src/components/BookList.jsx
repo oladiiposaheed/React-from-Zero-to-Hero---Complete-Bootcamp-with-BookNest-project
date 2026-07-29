@@ -4,7 +4,7 @@ import { CartContext } from '../contexts/CartContext';
 
 function BookList({ books, loading, error, searchTerm, onSearchChange }) {
 
-  const { cart, addToCart, removeFromCart } = useContext(CartContext)
+  const { cart } = useContext(CartContext)
   //Filter books based on search term
   const filteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -66,8 +66,6 @@ function BookList({ books, loading, error, searchTerm, onSearchChange }) {
                         key={book.id}
                         book={book}
                         isInCart={isInCart}
-                        onAdd={addToCart}
-                        onRemove={removeFromCart}
                     />
                 );
                 })}

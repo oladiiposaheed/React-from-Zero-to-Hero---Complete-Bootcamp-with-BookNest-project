@@ -7,17 +7,10 @@ const CartContext = createContext();
 function cartReducer(state, action) {
     switch (action.type) {
         case 'ADD':
-            return [...state, { ...action.book, quantity: 1 }];
+            return [...state, action.book];
         
             case 'REMOVE':
                 return state.filter(item =>item.id !== action.id);
-            
-            case 'UPDATE_QTY':
-                return state.map(item =>
-                    item.id === action.id
-                        ? { ...item, quantity: action.quantity }  // Update quantity
-                        : item           // Keep unchanged
-                );
             
             case 'CLEAR':
                 return [];

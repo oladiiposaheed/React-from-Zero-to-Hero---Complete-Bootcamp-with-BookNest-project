@@ -4,8 +4,8 @@ import { CartContext } from "../contexts/CartContext";
 
 function Cart() {
 
-    // Read cart and dispatch from context
-    const { cart, dispatch } = useContext(CartContext);
+    // Read cart and removeFromCart from context
+    const { cart, onRemoveFromCart } = useContext(CartContext);
 
     // Calculate total (pretend each book costs $29.99)
     const total = cart.length * 29.99;
@@ -32,7 +32,7 @@ function Cart() {
                                 </div>
                                 <p className="font-bold text-purple-600">$29.99</p>
                                 <button 
-                                    onClick={() => dispatch({ type: 'REMOVE', id: book.id })}
+                                    onClick={() => onRemoveFromCart(book.id)}
                                     className="bg-red-100 text-red-600 px-3 py-1 rounded-lg hover:bg-red-200 text-sm"
                                 >
                                     Remove
