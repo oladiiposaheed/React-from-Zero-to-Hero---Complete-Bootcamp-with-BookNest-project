@@ -14,6 +14,7 @@ function Cart() {
         <div>
             <h1 className="text-3xl font-bold text-gray-800 mb-6">🛒 Your Cart</h1>
         
+            <p>Debug: Cart has {cart.length} items</p>
             {/* If cart is empty */}
             {cart.length === 0 ? (
                 <div className="text-center py-20">

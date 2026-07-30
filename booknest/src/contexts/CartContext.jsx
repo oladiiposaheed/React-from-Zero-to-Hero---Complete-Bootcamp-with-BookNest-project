@@ -1,4 +1,5 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect } from "react";
+
 
 // Step 1: Create the context (empty storage box)
 const CartContext = createContext();
@@ -29,8 +30,24 @@ function cartReducer(state, action) {
 
 // ===== STEP 3: Provider — shares cart + dispatch =====
 function CartProvider({ children }) {
-    const [cart, dispatch] = useReducer(cartReducer, []);
+    // Get saved cart from localStorage (or empty array if nothing saved)
+    const [cart, dispatch] = useReducer(cartReducer, [], () => {
+        const saved = localStorage.getItem('booknest-cart');
+        return saved ? JSON.parse(saved) : [];
+        
+    });
+    // Save cart to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('booknest-cart', JSON.stringify(cart));
+    }, [cart]);
 
+    // Update tab title
+    useEffect(() => {
+       // console.log('Setting title, cart length:', cart.length);
+        document.title = cart.length > 0
+            ? `🛒 ${cart.length} | BooNest`
+            : '📚 BookNest';
+    }, [cart]);
     return (
         <CartContext.Provider value={{ cart, dispatch }}>
             {children}

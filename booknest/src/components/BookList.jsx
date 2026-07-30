@@ -40,8 +40,8 @@ function BookList({ books, loading, error, searchTerm, onSearchChange }) {
         {/* Search input */}
         <input 
           type="text"
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
+          value={searchTerm}   // Shows what user types
+          onChange={(e) => onSearchChange(e.target.value)}   // Updates instantly
           placeholder='Search books by title...'
           className='w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-lg mb-6 focus:outline-none'
         />

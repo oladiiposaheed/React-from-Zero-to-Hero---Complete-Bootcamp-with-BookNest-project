@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Layout from './components/Layout';
@@ -6,6 +6,8 @@ import BookDetails from './pages/BookDetails';
 import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
 import { CartProvider } from './contexts/CartContext';
+import useDebounce from './hooks/useDebounce';
+import { CartContext } from './contexts/CartContext';
 
 function App() {
     // ===== STATE =====
@@ -15,17 +17,14 @@ function App() {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // // ===== CART FUNCTIONS =====
-    // const addToCart = (book) => {
-    //     setCart([...cart, book]);    // Copy old cart + new book
-    // };
+    //const { cart } = useContext(CartContext);
 
-    // const removeFromCart = (id) => {
-    //     setCart(cart.filter(book => book.id !== id));  // Keep books that don't match ID
-    // };
+    // Debounce the search — only update after user stops typing
+    const debouncedSearch = useDebounce(searchTerm, 300);
 
     // ===== FETCH BOOKS FROM API =====
     useEffect(() => {
+
         const fetchBooks = async () => {
             try {
                 setLoading(true);      // Start spinner
@@ -65,8 +64,7 @@ function App() {
         };
 
         fetchBooks();
-    }, []);  // Empty [] = run once on first load
-
+    }, []);  // re-run
     return (
         <CartProvider>
             <BrowserRouter>
@@ -79,11 +77,9 @@ function App() {
                                 books={books}  // Pass books array
                                 loading={loading}   // Pass loading state
                                 error={error}   // Pass error message
-                                searchTerm={searchTerm}
-                                onSearchChange={setSearchTerm}
-                                // cart={cart}
-                                // onAddToCart={addToCart}
-                                // onRemoveFromCart={removeFromCart}
+                                //searchTerm={searchTerm}
+                                onSearchChange={setSearchTerm}  // Input updates instantly
+                                searchTerm={debouncedSearch}    // Filter uses delayed value
                             />
                         } />
                         {/* Add BookDetails Route */}
