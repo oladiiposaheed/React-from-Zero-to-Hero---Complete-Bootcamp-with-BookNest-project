@@ -1,36 +1,35 @@
-import { useState, memo } from "react";
+import { useState, useCallback, memo } from "react";
 
-// Regular child — re-renders every time parent renders
-// function Child({ name }) {
-//     console.log('Chil rendered:', name);
-//     return <p>Hello, {name}</p>;
-// }
 
-// Wrap Child with memo
-const Child = memo(function Child({ name }) {
-    console.log('Child rendered:', name);
-    return <p>Hello, {name}</p>
-})
-
+// Child wrapped with memo — only re-renders if props change
+const Child = memo(function Child({ onClick }) {
+    console.log('Child rendered');
+    return <button onClick={onClick}>Click Me</button>;
+});
 
 
 function App() {
-    const [count, setCount] = useState(0);
-    const [name, setName] = useState('Fatimah');
+    const[count, setCount] = useState(0);
+    const [other, setOther] = useState(0);
+
+    // Without useCallback — function recreated every render
+    // const handleClick = () => setCount(count + 1);
+    const handleClick = useCallback(() => {
+        // This function adds 1 to count
+        setCount(count + 1);
+    }, [count]);
 
     return (
         <div>
-            <h1>React.memo Demo</h1>
+            <h1>useCallback Demo</h1>
 
             <p>Count: {count}</p>
-            <button onClick={() => setCount(count + 1)}>
-                + Increase Count
+            <Child onClick={handleClick} />
+
+            <p>Other: {other}</p>
+            <button onClick={() => setOther(other + 1)}>
+                Change Other
             </button>
-
-            {/* Child gets name="Fatimah" — never changes */}
-            <Child name={name} />
-
-            <p>(Open Console F12 — Child re-renders every click even though name never changes)</p>
         </div>
     );
 }
