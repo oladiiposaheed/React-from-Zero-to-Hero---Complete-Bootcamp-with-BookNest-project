@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import { CartContext } from "../contexts/CartContext";
 
 function BookCard({ book, isInCart }) {
@@ -65,4 +65,4 @@ function BookCard({ book, isInCart }) {
   );
 }
 
-export default BookCard;
+export default memo(BookCard);
