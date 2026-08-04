@@ -3,7 +3,7 @@ import Header from './Header';
 
 function Layout() {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-0 px-6 pb-6 md:p-6">
+        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 pt-0 px-6 pb-6 md:px-10 md:pb-10"">
             <div className="max-w-7xl mx-auto">
 
                 {/* Header on every page */}
